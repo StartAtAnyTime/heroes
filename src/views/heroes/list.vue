@@ -2,7 +2,7 @@
     <div>
         <h2 class="sub-header">英雄列表</h2>
           <!-- <a class="btn btn-success" href="add.html">添加</a> -->
-          <router-link class="btn btn-success" to="/heroes/add"><a>添加</a></router-link>
+          <router-link class="btn btn-success" to="/heroes/add">添加</router-link>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -19,9 +19,10 @@
                   <td>{{item.name}}</td>
                   <td>{{item.gender}}</td>
                   <td>
-                    <a href="edit.html">edit</a>
+                    <!-- <a href="edit.html">edit</a> -->
+                    <router-link :to="'/heroes/edit/' +item.id ">编辑</router-link>
                     &nbsp;&nbsp;
-                    <a href="javascript:window.confirm('Are you sure?')">delete</a>
+                    <a @click.prevent="handleDel(item.id)" href="javascript:void(0)">删除</a>
                   </td>
                 </tr>
               </tbody>
@@ -50,6 +51,22 @@ export default {
           })
           .catch(err => {
             console.log(err)
+          })
+      },
+      handleDel(id){
+        if(!confirm('确认删除此数据')){
+          return
+        }
+        axios
+          .delete(`http://localhost:3000/heroes/${id}`)
+          .then(res => {
+            if(res.status===200){
+              this.renderRequest()
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            
           })
       }
     },
